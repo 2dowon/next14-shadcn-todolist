@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import TodoAddForm from "@/components/todo_add_form";
+import TodoList from "@/components/todo_list";
 
 export default function Home() {
   return (
@@ -7,10 +7,9 @@ export default function Home() {
       <div className="relative rounded-lg bg-white p-7 shadow-md sm:w-[500px] sm:h-[80vh] h-screen w-screen">
         <h1 className="pb-[1rem] font-extrabold text-3xl">TO DO LIST</h1>
 
-        <div className="flex gap-[1rem]">
-          <Input placeholder="typing todo" />
-          <Button>Add</Button>
-        </div>
+        <TodoAddForm />
+
+        <TodoList />
       </div>
     </div>
   );
