@@ -33,11 +33,7 @@ const useTodoListStore = create<ITodoListStore>((set) => ({
   updateTodo: (newTodo: ITodo) =>
     set((state) => ({
       todoList: state.todoList.map((todo) => {
-        if (todo.id === newTodo.id) {
-          return newTodo;
-        } else {
-          return todo;
-        }
+        return todo.id === newTodo.id ? newTodo : todo;
       }),
     })),
   deleteTodo: (id: number) =>
