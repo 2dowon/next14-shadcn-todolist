@@ -35,7 +35,10 @@ const TodoAddForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-[1rem]">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex gap-[0.8rem] items-center"
+      >
         <FormField
           control={form.control}
           name="name"
