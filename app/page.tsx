@@ -11,8 +11,11 @@ export default function Home() {
           <Link href="/todo-list">
             <Button type="button">TODO LIST</Button>
           </Link>
-          <Link href="/shopping-list">
-            <Button type="button">SHOPPING LIST</Button>
+          <Link href="/shopping-list-view">
+            <Button type="button">SHOPPING LIST VIEW</Button>
+          </Link>
+          <Link href="/shopping-editable-list">
+            <Button type="button">SHOPPING EDITABLE LIST</Button>
           </Link>
         </div>
       </div>
