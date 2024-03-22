@@ -1,16 +1,10 @@
 "use client";
 
-import { atom } from "jotai";
-import { useAtomValue } from "jotai/react";
-import Todo, { ITodo } from "./todo";
-
-export const todoListAtom = atom<ITodo[]>([
-  { id: 1, name: "hello", checked: false },
-  { id: 2, name: "shadcn", checked: false },
-]);
+import { ITodo, useTodoListStore } from "@/store/useTodoListStore";
+import Todo from "./todo";
 
 const TodoList = () => {
-  const todoList = useAtomValue(todoListAtom);
+  const todoList = useTodoListStore().todoList;
 
   return (
     <ul className="py-[1rem] space-y-[0.5rem]">

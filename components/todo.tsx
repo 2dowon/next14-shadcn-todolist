@@ -1,25 +1,14 @@
-import { useAtom } from "jotai";
-import { todoListAtom } from "./todo_list";
+"use client";
+
+import { ITodo, useTodoListStore } from "@/store/useTodoListStore";
 import { Checkbox } from "./ui/checkbox";
 
-export interface ITodo {
-  id: number;
-  name: string;
-  checked: boolean;
-}
-
 const Todo = ({ todo }: { todo: ITodo }) => {
-  const [, setTodoList] = useAtom(todoListAtom);
-
-  const handleCheckedChange = () => {
-    setTodoList((todoList: ITodo[]) =>
-      todoList.map((item) => {
-        if (item.id === todo.id) {
-          return { ...todo, checked: !todo.checked };
-        }
-        return item;
-      })
-    );
+  const handleCheckedChange = (checked: boolean) => {
+    useTodoListStore.getState().updateTodo({
+      ...todo,
+      checked: checked,
+    });
   };
 
   return (

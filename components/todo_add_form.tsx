@@ -1,43 +1,56 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAtom } from "jotai";
-import { useRef } from "react";
-import { todoListAtom } from "./todo_list";
+import { useTodoListStore } from "@/store/useTodoListStore";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import z from "zod";
+
+const todoSchema = z.object({
+  name: z.string(),
+});
 
 const TodoAddForm = () => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const form = useForm<z.infer<typeof todoSchema>>({
+    resolver: zodResolver(todoSchema),
+    defaultValues: { name: "" },
+  });
 
-  const [, setTodoList] = useAtom(todoListAtom);
-
-  const addTodo = (): void => {
-    const name = inputRef.current?.value;
-
-    if (name) {
-      setTodoList((todoList) => [
-        ...todoList,
-        { id: Date.now(), name, checked: false },
-      ]);
-
-      inputRef.current.value = "";
-    }
+  const onSubmit = (values: z.infer<typeof todoSchema>) => {
+    useTodoListStore.getState().addTodo({
+      id: Date.now(),
+      name: values.name,
+      checked: false,
+    });
+    form.reset();
   };
 
   return (
-    <div className="flex gap-[1rem]">
-      <Input
-        ref={inputRef}
-        type="text"
-        placeholder="Create a new Todo"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            addTodo();
-          }
-        }}
-      />
-      <Button onClick={addTodo}>Add</Button>
-    </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-[1rem]">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormControl>
+                <Input placeholder="Create a new Todo" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Add</Button>
+      </form>
+    </Form>
   );
 };
 
