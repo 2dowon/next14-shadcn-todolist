@@ -1,14 +1,5 @@
 "use client";
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,60 +17,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  IShoppingItem,
+  useShoppingListStore,
+} from "@/store/useShoppingListStore";
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import ShoppingItemDialog from "./shopping_item_dialog";
 
-const data: ShoppingItem[] = [
-  {
-    id: 1,
-    price: 31600000,
-    category: "로봇청소기",
-    modelName: "test1",
-  },
-  {
-    id: 2,
-    price: 24200,
-    category: "냉장고",
-    modelName: "test2",
-  },
-  {
-    id: 3,
-    price: 8370,
-    category: "TV",
-    modelName: "test3",
-  },
-  {
-    id: 4,
-    price: 874000,
-    category: "세탁기",
-    modelName: "test4",
-  },
-  {
-    id: 5,
-    price: 72100,
-    category: "건조기",
-    modelName: "test6",
-  },
-  {
-    id: 6,
-    price: 874000,
-    category: "식기세척기",
-    modelName: "test4",
-  },
-  {
-    id: 7,
-    price: 72100,
-    category: "노트북",
-    modelName: "test7",
-  },
-];
-
-export type ShoppingItem = {
-  id: number;
-  price: number;
-  category: string;
-  modelName: string;
-};
-
-export const columns: ColumnDef<ShoppingItem>[] = [
+export const columns: ColumnDef<IShoppingItem>[] = [
   {
     accessorKey: "category",
     header: "항목",
@@ -129,6 +81,7 @@ export const columns: ColumnDef<ShoppingItem>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
@@ -139,8 +92,23 @@ export const columns: ColumnDef<ShoppingItem>[] = [
               Copy Shopping Item ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>TEST 1</DropdownMenuItem>
-            <DropdownMenuItem>TEST 2</DropdownMenuItem>
+            <ShoppingItemDialog
+              triggerButton={
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  EDIT
+                </DropdownMenuItem>
+              }
+              shoppingItem={shoppingItem}
+            />
+            <DropdownMenuItem
+              onClick={() =>
+                useShoppingListStore
+                  .getState()
+                  .deleteShoppingItem(shoppingItem.id)
+              }
+            >
+              DELETE
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -149,20 +117,26 @@ export const columns: ColumnDef<ShoppingItem>[] = [
 ];
 
 export function ShoppingListTable() {
+  const shoppingList = useShoppingListStore().shoppingList;
+
   const table = useReactTable({
-    data,
+    data: shoppingList,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    defaultColumn: {
-      size: 200, //starting column size
-      minSize: 50, //enforced during column resizing
-      maxSize: 500, //enforced during column resizing
-    },
   });
 
   return (
     <div className="w-full">
+      <div className="flex justify-end mb-3">
+        <ShoppingItemDialog
+          triggerButton={
+            <Button type="button" variant="outline">
+              ADD SHOPPING ITEM
+            </Button>
+          }
+        />
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
